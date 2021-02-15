@@ -10,7 +10,6 @@ Vue.use(ElementUI);
 
 //设置开发/生产环境
 Vue.config.productionTip = process.env.NODE_ENV === 'production';
-console.log(process.env.NODE_ENV)
 
 new Vue({
   router,

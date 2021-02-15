@@ -87,10 +87,24 @@
 </template>
 
 <script>
+import testApi from '@/api/test'
+
 export default {
   name: "HelloWorld",
   props: {
     msg: String
+  },
+
+  created() {
+    this.fetchData()
+  },
+
+  methods: {
+    fetchData() {
+      testApi.getList().then(response => {
+        console.log(response.data)
+      })
+    }
   }
 };
 </script>
