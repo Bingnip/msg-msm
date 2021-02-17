@@ -70,11 +70,6 @@ export default {
               getUserInfo(res.data.data.token).then((resp) => {
                 localStorage.setItem("mxg-msm-user", JSON.stringify(resp.data.data));
                 localStorage.setItem("mxg-msm-token", res.data.data.token);
-                this.$message({
-                  showClose: true,
-                  message: "登录成功！",
-                  type: "success",
-                });
                 //前往首页
                 this.$router.push("/");
               });
