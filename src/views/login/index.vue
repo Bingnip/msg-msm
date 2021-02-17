@@ -1,6 +1,12 @@
 <template>
   <div class="login-container">
-    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="80px" class="login-form">
+    <el-form
+      ref="ruleForm"
+      :model="ruleForm"
+      :rules="rules"
+      label-width="80px"
+      class="login-form"
+    >
       <h2 class="login-title">梦学谷会员管理系统</h2>
       <el-form-item label="账号" prop="name">
         <el-input v-model="ruleForm.name"></el-input>
@@ -9,7 +15,9 @@
         <el-input type="password" v-model="ruleForm.password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')"
+          >登录</el-button
+        >
       </el-form-item>
     </el-form>
   </div>
@@ -37,6 +45,9 @@ body {
 </style>
 
 <script>
+//导入普通成语的映射
+import { login, getUserInfo } from "@/api/login";
+
 export default {
   data() {
     return {
@@ -45,29 +56,41 @@ export default {
         password: "",
       },
       rules: {
-          name: [
-            { required: true, message: '请输入账号', trigger: 'blur' }
-          ],
-          password: [
-            { required: true, message: '请输入密码', trigger: 'blur' }
-          ]
-      }
+        name: [{ required: true, message: "请输入账号", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+      },
     };
   },
   methods: {
     submitForm(formName) {
-        this.$refs[formName].validate(valid => {
-            if (valid) {
-
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          login(this.ruleForm.name, this.ruleForm.password).then((res) => {
+            if (res.data.flag) {
+              getUserInfo(res.data.data.token).then((resp) => {
+                localStorage.setItem("mxg-msm-user", JSON.stringify(resp.data.data));
+                localStorage.setItem("mxg-msm-token", res.data.data.token);
+                this.$message({
+                  showClose: true,
+                  message: "登录成功！",
+                  type: "success",
+                });
+                //前往首页
+                this.$router.push("/");
+              });
             } else {
-                console.log('验证失败')
-                return false
+              return false
             }
-        })
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
-      }
+          });
+        } else {
+          console.log("验证失败");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
   },
 };
 </script>

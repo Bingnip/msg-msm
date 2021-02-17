@@ -6,7 +6,7 @@ module.exports = {
         open: true,  //启动服务时自动打开浏览器访问
         proxy: {  //开发环境代理配置
             // key用变量用[]包裹，如'/dev-api'
-            [ process.env.VUE_APP_BASE_URL ]: {
+            [ process.env.VUE_APP_BASE_API ]: {
                 target: process.env.VUE_APP_SERVICE_URL,  //目标服务器地址
                 changeOrigin: true,  //开启代理服务器
                 pathRewrite: {
