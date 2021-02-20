@@ -30,35 +30,59 @@ const router = new VueRouter({
           meta: {
             title: '首页'
           }
-        },
+        }
+      ]
+    },
+    {
+      path: '/member',
+      component: Layout,
+      children: [
         {
-          path: '/staff',
-          component: Staff,
-          meta: {
-            title: '员工管理'
-          }
-        },
-        {
-          path: '/goods',
-          component: Goods,
-          meta: {
-            title: '商品管理'
-          }
-        },
-        {
-          path: '/member',
+          path: '/',
           component: Member,
           meta: {
             title: '会员管理'
           }
-        },
+        }
+      ]
+    },
+    {
+      path: '/staff',
+      component: Layout,
+      children: [
         {
-          path: '/supplier',
+          path: '/',
+          component: Staff,
+          meta: {
+            title: '员工管理'
+          }
+        }
+      ]
+    },
+    {
+      path: '/supplier',
+      component: Layout,
+      children: [
+        {
+          path: '/',
           component: Supplier,
           meta: {
             title: '供应商管理'
           }
-        },
+        }
+      ]
+    },
+    {
+      path: '/goods',
+      component: Layout,
+      children: [
+        {
+          path: '/',
+          component: Goods,
+          meta: {
+            title: '商品管理'
+          }
+        }
       ]
     },
   ]
