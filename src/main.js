@@ -8,6 +8,9 @@ import router from "./router/router";
 //要真正调用elementUI，vue需要use
 Vue.use(ElementUI);
 
+//权限拦截
+import './permission'
+
 //设置开发/生产环境
 Vue.config.productionTip = process.env.NODE_ENV === 'production';
 
