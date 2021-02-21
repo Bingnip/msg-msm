@@ -1,3 +1,3 @@
 <template>
-    <div>员工管理</div>
+    <div></div>
 </template>

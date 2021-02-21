@@ -1,3 +1,3 @@
 <template>
-    <div>会员管理</div>
+    <div></div>
 </template>
