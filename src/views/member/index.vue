@@ -1,5 +1,30 @@
 <template>
   <div>
+    <el-form ref="searchForm" :inline="true" :model="searchMap" style="margin-top: 20px;">
+    <el-form-item prop="cardNum">
+        <el-input v-model="searchMap.cardNum" placeholder="卡号"></el-input>
+    </el-form-item>
+    <el-form-item prop="name">
+        <el-input v-model="searchMap.name" placeholder="会员名字"></el-input>
+    </el-form-item>
+    <el-form-item prop="payType">
+        <el-select v-model="searchMap.payType" placeholder="支付类似">
+            <el-option v-for="option in payTypeOptions" 
+            :key="option.type"
+            :label="option.name"
+            :value="option.type"
+            ></el-option>
+        </el-select>
+    </el-form-item>
+    <el-form-item prop="birthday">
+        <el-date-picker el-date-picker value-format="yyyy-MM-dd" v-model="searchMap.birthday" type="date" placeholder="选择日期"></el-date-picker>
+    </el-form-item>
+    <el-form-item>
+        <el-button type="primary" @click="fetchData">查询</el-button>
+        <el-button @click="resetForm('searchForm')">重置</el-button>
+    </el-form-item>
+    </el-form>
+
     <el-table :data="list" height="650" border style="width: 100%">
       <!-- type="index" 索引下标 -->
       <el-table-column type="index" label="序号"> </el-table-column>
@@ -31,9 +56,10 @@
         </template>
       </el-table-column>
     </el-table>
+
     <el-pagination
-      @size-change="fetchData"
-      @current-change="fetchData"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-sizes="[10, 20, 50]"
       :page-size="pageSize"
@@ -59,8 +85,14 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0,
-      searchMap: {},
+      searchMap: {
+          cardNum: '',
+          payType: '',
+          name: '',
+          birthday: ''
+      },
       list: [],
+      payTypeOptions
     };
   },
 
@@ -79,12 +111,23 @@ export default {
         }
       });
     },
+    handleSizeChange(val) {
+        this.pageSize = val
+        this.fetchData()
+    },
+    handleCurrentChange(val) {
+        this.currentPage = val
+        this.fetchData()
+    },
     handleEdit(index) {
       console.log(index)
     },
     handleDelete(index) {
       console.log(index)
     },
+    resetForm(formName) {
+        this.$refs[formName].resetFields();
+    }
   },
 
   filters: {
