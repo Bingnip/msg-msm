@@ -21,6 +21,7 @@
     </el-form-item>
     <el-form-item>
         <el-button type="primary" @click="fetchData">查询</el-button>
+        <el-button type="primary" @click="handleAdd()">新增</el-button>
         <el-button @click="resetForm('searchForm')">重置</el-button>
     </el-form-item>
     </el-form>
@@ -66,6 +67,45 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
+
+    <el-dialog title="新增会员" :visible.sync="dialogFormVisible" width="500px;">
+        <el-form :rules="rules" ref="pojoForm" label-width="100px" label-position="right" style="width: 400px;" :model="pojo">
+            <el-form-item label="会员卡号" prop="cardNum">
+                <el-input v-model="pojo.cardNum" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="会员名称" prop="name">
+                <el-input v-model="pojo.name" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="会员生日" prop="birthday">
+                <el-date-picker el-date-picker value-format="yyyy-MM-dd" v-model="pojo.birthday" type="date" placeholder="请点击选择"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="手机号码" prop="phone">
+                <el-input v-model="pojo.phone" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="开卡金额" prop="money">
+                <el-input v-model="pojo.money" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="积分" prop="integral">
+                <el-input v-model="pojo.integral" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="支付类型" prop="payType">
+                <el-select v-model="pojo.payType" placeholder="支付类型">
+                    <el-option v-for="option in payTypeOptions" 
+                    :key="option.type"
+                    :label="option.name"
+                    :value="option.type"
+                    ></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="会员地址" prop="address">
+                <el-input type="textarea" v-model="pojo.address" autocomplete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="addData('pojoForm')">确 定</el-button>
+        </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -89,10 +129,32 @@ export default {
           cardNum: '',
           payType: '',
           name: '',
-          birthday: ''
+          birthday: '',
       },
       list: [],
-      payTypeOptions
+      payTypeOptions,
+      pojo: {
+        cardNum: '',
+        name: '',
+        birthday: '',   
+        phone: '',
+        money: 0,
+        integral: 0,
+        payType: '',
+        address: ''
+      },
+      dialogFormVisible: false,
+      rules: {
+          cardNum: [
+              {required: true, message: '卡号不能为空', trigger: 'blur'}
+          ],
+          name: [
+              {required: true, message: '姓名不能为空', trigger: 'blur'}
+          ],
+          payType: [
+              {required: true, message: '支付类型不能为空', trigger: 'change'}
+          ],
+      }
     };
   },
 
@@ -127,8 +189,35 @@ export default {
     },
     resetForm(formName) {
         this.$refs[formName].resetFields();
+    },
+    addData(formName) {
+        this.$refs[formName].validate(valid => {
+          if (valid) {
+            memberApi.addMember(this.pojo).then(res => {
+              if (res.data.flag) {
+                this.fetchData()
+                this.dialogFormVisible = false
+              } else {
+                this.$message({
+                  message: res.data.msg,
+                  type: 'warning'
+                })
+              }
+            })
+          } else {
+            return false
+          }
+        })
+    },
+    handleAdd() {
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['pojoForm'].resetFields()
+      })
     }
   },
+
+     
 
   filters: {
       payTypeFilter(type) {

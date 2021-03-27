@@ -13,5 +13,12 @@ export default {
             method: 'post',
             data: searchMap
         })
+    },
+    addMember(pojo) {
+        return request({
+            url: '/member',
+            method: 'post',
+            data: pojo
+        })
     }
 }
